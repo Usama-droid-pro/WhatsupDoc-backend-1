@@ -127,7 +127,9 @@ exports.getTotalHospitalRating= (req,res) =>{
     const hospital_id = req.params.hospital_id;
     let totalRating=0
     hospitalRatingModel.find({hospital_id:hospital_id}, (err , result)=>{ 
-        const count=result.length;
+
+        if(result.length > 0){
+            const count=result.length;
         if(count>0){
             result.forEach(element => {
                 totalRating=(element.stars_rate+totalRating);
@@ -137,16 +139,34 @@ exports.getTotalHospitalRating= (req,res) =>{
             let rating=totalRating/count;
              console.log(rating);
              try{
-                res.json({
-                    message:"Total rating of This hospital Id:"+ hospital_id,
-                    totalRating:rating,
-                    totalRatingCount:count
-                })
+                if(result){
+                    res.json({
+                        message:"Total rating of This hospital Id:"+ hospital_id,
+                        totalRating:rating,
+                        totalRatingCount:count
+                    })
+                }
+                else{
+                    res.json({
+                        message: "Not found",
+                        status:false,
+                    })
+                }
+                
              }
              catch(err){
                 res.json(err)
              }
         }
+        
+        }
+        else{
+            res.json({
+                message: "Not found",
+                status:false
+            })
+        }
+        
     })
 }
 
