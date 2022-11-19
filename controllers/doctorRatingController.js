@@ -94,6 +94,36 @@ exports.getDoctorRating = (req,res) =>{
     })
 }
 
+exports.getDoctorRatingByDoctorId = async (req,res) =>{
+
+    try{
+        const doctorId = req.query.doctorId;
+        const result = await doctorRatingModel.find({doctor_id:doctorId}).populate("patient_id");
+
+    if(result){
+        res.json({
+            message: "fetched",
+            status:true,
+            result:result
+        })
+    }
+    else{
+        res.json({
+            message: "Could not fetch",
+            status:false,
+        })
+    }
+    }
+    catch(err){
+        res.json({
+            message: "error",
+            error:err.message
+        })
+    }
+    
+
+}
+
 exports.getTotalDoctorRating= (req,res) =>{
     const doctor_id = req.params.doctor_id;
     let totalRating=0

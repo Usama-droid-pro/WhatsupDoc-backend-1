@@ -94,6 +94,35 @@ exports.getHospitalRating = (req,res) =>{
     })
 }
 
+exports.getHospitalRatingById = async (req,res) =>{
+
+    try{
+        const hospitalId = req.query.hospitalId;
+        const result = await hospitalRatingModel.find({hospital_id:hospitalId}).populate("patient_id");
+
+    if(result){
+        res.json({
+            message: "fetched",
+            status:true,
+            result:result
+        })
+    }
+    else{
+        res.json({
+            message: "Could not fetch",
+            status:false,
+        })
+    }
+    }
+    catch(err){
+        res.json({
+            message: "error",
+            error:err.message
+        })
+    }
+    
+
+}
 exports.getTotalHospitalRating= (req,res) =>{
     const hospital_id = req.params.hospital_id;
     let totalRating=0
