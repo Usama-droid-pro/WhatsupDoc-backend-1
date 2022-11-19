@@ -20,6 +20,7 @@ exports.createDoctor= async (req,res)=>{
         const phone_no = req.body.phone_no;
         const paypal_email=req.body.paypal_email;
         const department_id = req.body.department_id;
+        const doctorIdCardNumber = req.body.doctorIdCardNumber;
 
         var foundResult= await doctorModel.findOne({_id:doctor_id})
         if(req.files){
@@ -186,6 +187,7 @@ exports.createDoctor= async (req,res)=>{
             phone_no:phone_no,
             paypal_email:paypal_email,
             department_id:department_id,
+            doctorIdCardNumber:doctorIdCardNumber,
             }
             ,
             {

@@ -42,6 +42,7 @@ const doctorSchema = new mongoose.Schema({
     },
     phone_no:String,
     paypal_email:String,
+    doctorIdCardNumber:String,
 
 }, {
     timestamps:true,
