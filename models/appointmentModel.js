@@ -44,6 +44,7 @@ const appointment_Schema = new mongoose.Schema({
         default:date()
     },
     appointment_date:String,
+    appointmentNumber:String,
 
 },)
 

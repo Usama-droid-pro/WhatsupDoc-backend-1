@@ -7,10 +7,9 @@ const sendNotification= require("../utils/notification")
 
 exports.createAppointment = async (req,res)=>{
     const notificationSaveResponse={};
-
-
-
     try{
+
+    var appointmentNumber = Math.floor(1000 + Math.random() * 9000);
             
     const bookedby_patient_id= req.body.bookedby_patient_id;
     const type_of_work = req.body.type_of_work;
@@ -77,7 +76,8 @@ exports.createAppointment = async (req,res)=>{
                 work_day_for_office_id:work_day_for_office_id,
                 work_day_for_office_timing_id:work_day_for_office_timing_id,
                 status:status,
-                appointment_date:appointment_date
+                appointment_date:appointment_date,
+                appointmentNumber:appointmentNumber
             })
 
             const result = await savedAppointment.save();
@@ -163,7 +163,8 @@ exports.createAppointment = async (req,res)=>{
                 work_day_for_office_timing_id:work_day_for_office_timing_id,
                 status:status,
                 other_patient_id,other_patient_id,
-                appointment_date:appointment_date
+                appointment_date:appointment_date,
+                appointmentNumber:appointmentNumber
             })
 
             const result = await savedAppointment.save();
