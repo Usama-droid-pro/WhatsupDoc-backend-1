@@ -257,12 +257,19 @@ exports.deleteHospitalProfile = async (req,res)=>{
 
         if(findHospital){
             if(findHospital.profile_img ){
-                await cloudinary.uploader.destroy(findHospital.profile_img.public_id)
+                if(Object.keys(findHospital.profile_img).length === 0 && findHospital.profile_img.constructor === Object)
+                {
+                    console.log(findHospital.profile_img)
+                    console.log("sakfhasi")
+                    await cloudinary.uploader.destroy(findHospital.profile_img.public_id)
+                }
+                
             }
         }
 
         if(findHospital){
             if(findHospital.img.length>0){
+                console.log("hs")
                 let imagesArray = findHospital.img;
                 imagesArray.forEach(element => {
                     cloudinary.uploader.destroy(element.public_id)
