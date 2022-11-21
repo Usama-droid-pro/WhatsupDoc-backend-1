@@ -198,7 +198,38 @@ exports.updateHospital = async (req,res)=>{
 exports.getAllHospitals=async (req,res)=>{
     
     try{
-        const result =await hospitalModel.find({}).populate("hospital_type_id")
+        // const result =await hospitalModel.find({}).populate("hospital_type_id")
+        
+        const result = await hospitalModel.aggregate([
+            {
+                $lookup:{
+                    from :"logins",
+                    localField:"_id",
+                    foreignField:"user_id",
+                    as: "hospital_signup_details"
+                }
+            },
+            {
+                $lookup:{
+                    from: "hospital_types",
+                    localField:"hospital_type_id",
+                    foreignField:"_id",
+                    as:"hospital_type_details"
+                }
+            },
+            {
+                $addFields: {
+                    hospital_signup_details: {$arrayElemAt:["$hospital_signup_details",0]}
+                }
+             },{
+                $addFields: {
+                    hospital_type_details: {$arrayElemAt:["$hospital_type_details",0]}
+                }
+             }
+            
+        ])
+
+        
         if(result){
         res.json({
             message: "Fetched all hospital Profiles",

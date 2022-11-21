@@ -232,7 +232,39 @@ exports.createDoctor= async (req,res)=>{
 exports.getAllDoctors = async(req,res)=>{
     
     try{
-        const result = await doctorModel.find({}).populate("hospital_id").populate("subscription_history_id").populate("department_id");
+        // const result = await doctorModel.find({}).populate("hospital_id").populate("subscription_history_id").populate("department_id");
+
+        const result = await doctorModel.aggregate([
+            {
+                $lookup:{
+                    from :"logins",
+                    localField:"_id",
+                    foreignField:"user_id",
+                    as: "doctor_signup_details"
+                }
+            },
+            {
+                $lookup:{
+                    from: "departments",
+                    localField:"department_id",
+                    foreignField:"_id",
+                    as:"departmentDetails"
+                }
+            },
+            {
+                $lookup:{
+                    from: "subscriptionhistories",
+                    localField:"subscription_history_id",
+                    foreignField:"_id",
+                    as:"subscription_history_details"
+                }
+            },
+            {
+                $addFields: {
+                    doctor_signup_details: {$arrayElemAt:["$doctor_signup_details",0]}
+                }
+             },
+        ])
 
         if(result){
             res.json({

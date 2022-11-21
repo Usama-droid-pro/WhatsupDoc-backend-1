@@ -147,7 +147,22 @@ exports.createPatient= async (req,res)=>{
 exports.getAllPatients = async(req,res)=>{
     
     try{
-        const result = await patientModel.find({})
+        const result = await patientModel.aggregate([
+            {
+                $lookup:{
+                    from :"logins",
+                    localField:"_id",
+                    foreignField:"user_id",
+                    as: "patient_signup_details"
+                }
+            },
+            {
+                $addFields: {
+                    patient_signup_details: {$arrayElemAt:["$patient_signup_details",0]}
+                }
+             },
+            
+        ])
 
         if(result){
             res.json({
