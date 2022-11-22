@@ -445,3 +445,32 @@ else{
     }
 
 }
+
+exports.getDoctorsByHospitalId = async(req,res)=>{
+    try{
+        const hospital_id= req.query.hospital_id;
+        const result = await doctorModel.find({hospital_id:hospital_id}).populate("hospital_id").populate("subscription_history_id").populate("department_id")
+
+        if(result){
+            res.json({
+                message: "doctors fetched successfully",
+                result:result,
+                statusCode: 200
+            })
+        }else{
+            res.json({
+                message: "Could not fetch doctors ",
+                result:result,
+                statusCode:404
+            })
+        }
+
+    }
+    catch(err){
+        res.json({
+            message: "Error",
+            status:false,
+            error:err.message,
+        })
+    }
+}
