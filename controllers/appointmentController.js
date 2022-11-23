@@ -4,6 +4,8 @@ const appointmentModel= require('../models/appointmentModel');
 const cloudinary = require("../utils/cloudinary")
 const other_patient_details= require("../models/other_patient_detailsModel")
 const sendNotification= require("../utils/notification")
+const patientModel = require("../models/patientModel")
+const ObjectId = require("mongodb").ObjectId;
 
 exports.createAppointment = async (req,res)=>{
     const notificationSaveResponse={};
@@ -623,6 +625,116 @@ exports.updateAppointment = async (req,res)=>{
             message:"Error occurred While updating",
             error:err.message,
             statusCode:500
+        })
+    }
+}
+
+exports.getDoctorAppointmentsByTypeOfWork = async (req,res)=>{
+    try{
+        const doc_id = req.query.doc_id;
+        const status =req.query.status;
+        const typeOfWork= req.query.typeOfWork;
+
+        let result;
+
+        if(doc_id && !status && typeOfWork){
+             result = await appointmentModel.find({doctor_id:doc_id}).populate("bookedby_patient_id").populate("other_patient_id");
+        }
+
+        if(doc_id && status && typeOfWork){
+            result = await appointmentModel.find({doctor_id:doc_id , status:status , type_of_work:typeOfWork}).populate("bookedby_patient_id").populate("other_patient_id");
+        }
+
+
+
+        if(result){
+            res.json({
+                message: "doctor appointments Fetched successfully",
+                result:result,
+                statusCode:200
+            })
+        }
+        else{
+            res.json({
+                message:"Could not fetched",
+                result:null,
+            })
+        }
+    }
+    catch(err){
+        res.json(err)
+    }
+}
+
+exports.getDoctorsPatients = async ( req , res)=>{
+    try{
+        const doc_id = req.query.doc_id;
+        let patientIds = [];
+        console.log(typeof(patientIds))
+
+        const result = await appointmentModel.find({doctor_id: doc_id});
+
+        if(result){
+            for(let i = 0; i < result.length; i++){
+                patientIds.push(result[i].bookedby_patient_id.toString())
+            }
+        }
+        
+        
+        let uniques = [...new Set(patientIds)]
+        console.log(typeof(uniques))
+        console.log(uniques)
+        
+        let patients = [];
+        for (let i = 0; i < uniques.length; i++){
+            let patientsDetails = await patientModel.findOne({_id:uniques[i]});
+            if(patientsDetails){
+                patients.push(patientsDetails)
+            }
+        }
+        
+        console.log(patients)
+        
+        res.json({
+            message: "Those Patients which have taken appointment with this doctor",
+            result:patients,
+            status:false
+        });
+
+        
+        
+    }
+    catch(err){
+        res.json(err)
+    }
+}
+
+exports.getPatientAppointmentsWithDoctors = async( req,res)=>{
+
+    try{
+        const doc_id= req.query.doc_id;
+        const patient_id= req.query.patient_id;
+
+        const result = await appointmentModel.find({patient_id:patient_id , doctor_id:doc_id}).populate("bookedby_patient_id").populate("other_patient_id");
+
+        if(result){
+            res.json({
+                message: "Patient appointments with this doctor has fetched",
+                result:result,
+                status:false
+            })
+        }
+        else{
+            res.json({
+                message: "Could not fetch",
+                status:false
+            })
+        }
+    }
+    catch(err){
+        res.json({
+            message: "Error Occurred",
+            status:false
         })
     }
 }

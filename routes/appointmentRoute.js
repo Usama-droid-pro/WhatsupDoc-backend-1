@@ -13,6 +13,12 @@ router.get("/getAllAppointmentsOfPatient" , controller.getAllAppointmentsOfPatie
 router.put("/changeAppointmentStatus" , controller.changeAppointmentStatus)
 router.delete("/deleteAppointment" , controller.deleteAppointment)
 router.put("/updateAppointment" ,upload.array("images"), controller.updateAppointment)
+router.get("/getDoctorAppointmentsByTypeOfWork",controller.getDoctorAppointmentsByTypeOfWork)
+router.get("/getDoctorsPatients",controller.getDoctorsPatients)
+router.get("/getPatientAppointmentsWithDoctor",controller.getPatientAppointmentsWithDoctors)
+
+
+
 
 
 
