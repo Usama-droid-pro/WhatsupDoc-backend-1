@@ -31,6 +31,6 @@ router.post("/updateDoctor" , upload.fields([
 router.get("/getAllDoctors" , controller.getAllDoctors)
 router.get("/getDoctorById/:doctor_id" , controller.getDoctorById)
 router.delete("/deleteDoctorProfile/:doctor_id" , controller.deleteDoctorProfile)
-router.get("/deleteDoctorByHospitalId" , controller.getDoctorsByHospitalId)
+router.get("/getDoctorsByHospitalId" , controller.getDoctorsByHospitalId)
 
 module.exports= router;

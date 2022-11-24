@@ -26,6 +26,11 @@ const notificationSchema = new mongoose.Schema({
         enum:["read", "unread"],
         default:"unread"
     },
+    appointment_id:String,
+    type:{
+        type:String,
+        enum:["appointmentBooking" , "appointmentCancelled" , "reviewedAppointment" , "ratedAppointment", "ratedAndReviewedAppointment"]
+    }
 })
 
 module.exports = mongoose.model("notification" , notificationSchema)

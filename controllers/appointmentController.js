@@ -86,7 +86,7 @@ exports.createAppointment = async (req,res)=>{
 
             if(result){
 
-                const isNotificationSaved= await sendNotification(savedAppointment.doctor_id ,savedAppointment.bookedby_patient_id , "New Patient Booked an appointment with You" , "doctor" , "patient" )
+                const isNotificationSaved= await sendNotification(savedAppointment.doctor_id ,savedAppointment.bookedby_patient_id , "New Patient Booked an appointment with You" , "doctor" , "patient",savedAppointment._id , "appointmentBooking" )
                 if(isNotificationSaved){
                     notificationSaveResponse.message="Notification has been sent to doctor"
                 }
@@ -173,7 +173,7 @@ exports.createAppointment = async (req,res)=>{
 
             if(result){
 
-                const isNotificationSaved= await sendNotification(savedAppointment.doctor_id ,savedAppointment.bookedby_patient_id , "New Patient Booked an appointment with You" , "doctor" , "patient" )
+                const isNotificationSaved= await sendNotification(savedAppointment.doctor_id ,savedAppointment.bookedby_patient_id , "New Patient Booked an appointment with You" , "doctor" , "patient" ,savedAppointment._id, "appointmentBooking")
                 if(isNotificationSaved){
                     notificationSaveResponse.message="Notification has been sent to doctor"
                 }
@@ -364,25 +364,25 @@ exports.changeAppointmentStatus = async (req , res) =>{
         if(result){
 
             if(status==="cancelled"){
-                const isNotificationSaved= await sendNotification(result.doctor_id ,result.bookedby_patient_id , "Patient cancelled appointment with you" , "doctor" , "patient" )
+                const isNotificationSaved= await sendNotification(result.doctor_id ,result.bookedby_patient_id , "Patient cancelled appointment with you" , "doctor" , "patient" , result._id , "appointmentCancelled" )
                 if(isNotificationSaved){
                     notificationCancelledResponse.message="Notification has been sent to doctor"
                 }
             }
             if(review && !rating_stars){
-                const isNotificationSaved= await sendNotification(result.doctor_id ,result.bookedby_patient_id , "Patient has added review for appointment" , "doctor" , "patient" )
+                const isNotificationSaved= await sendNotification(result.doctor_id ,result.bookedby_patient_id , "Patient has added review for appointment" , "doctor" , "patient" , result._id , "reviewedAppointment")
                 if(isNotificationSaved){
                     notificationSaveResponse.message="Notification has been sent to doctor"
                 }
             }
             else if(rating_stars && ! review){
-                const isNotificationSaved= await sendNotification(result.doctor_id ,result.bookedby_patient_id , "patient has rated Appointment" , "doctor" , "patient" )
+                const isNotificationSaved= await sendNotification(result.doctor_id ,result.bookedby_patient_id , "patient has rated Appointment" , "doctor" , "patient" , result._id , "ratedAppointment")
                 if(isNotificationSaved){
                     notificationSaveResponse.message="Notification has been sent to doctor"
                 }
             }
             else if(review && rating_stars){
-                const isNotificationSaved= await sendNotification(result.doctor_id ,result.bookedby_patient_id , "Patient has added review and rating for appointment" , "doctor" , "patient" )
+                const isNotificationSaved= await sendNotification(result.doctor_id ,result.bookedby_patient_id , "Patient has added review and rating for appointment" , "doctor" , "patient" , result._id , "ratedAndReviewedAppointment")
                 if(isNotificationSaved){
                     notificationSaveResponse.message="Notification has been sent to doctor"
                 }
