@@ -2,6 +2,7 @@
 const mongoose= require("mongoose");
 
 const doctorRatingModel= require("../models/doctorRatingModel")
+const doctorModel = require("../models/doctorModel")
 
 exports.rateDoctor= async (req,res)=>{
     try{
@@ -196,3 +197,29 @@ exports.deleteDoctorRating = async (req,res)=>{
         })
     }
 }
+
+// exports.getDoctorsByRating = async (req,res)=>{
+//     try{
+//         const result = await doctorModel.aggregate([
+//             {
+//                 $lookup:{
+//                     from:"doctor_ratings",
+//                     localField:"_id",
+//                     foreignField:"doctor_id",
+//                     as : "doctorRatings"
+//                 }
+//             }, 
+//             {
+//                 $addFields:{doctorRatings:{$avg:"$doctorRatings.stars_rate"} , totalRatingCount:{$size:"$doctorRatings"}}
+//             }
+//         ])
+
+//         console.log(result);
+//         res.json(result);
+//     }
+//     catch(err){
+//         res.json({
+//             message:"Error"
+//         })
+//     }
+// }

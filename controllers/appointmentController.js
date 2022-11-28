@@ -308,13 +308,14 @@ exports.getAllAppointmentsOfPatient = async (req,res)=>{
         const status =req.query.status;
 
         let result;
+        console.log(patient_id)
 
         if(patient_id && !status){
-             result = await appointmentModel.find({patient_id:patient_id}).populate("bookedby_patient_id").populate("other_patient_id");
+             result = await appointmentModel.find({bookedby_patient_id:patient_id}).populate("bookedby_patient_id").populate("other_patient_id");
         }
 
         if(patient_id && status){
-            result = await appointmentModel.find({patient_id:patient_id , status:status}).populate("bookedby_patient_id").populate("other_patient_id");
+            result = await appointmentModel.find({bookedby_patient_id:patient_id , status:status}).populate("bookedby_patient_id").populate("other_patient_id");
         }
 
 
