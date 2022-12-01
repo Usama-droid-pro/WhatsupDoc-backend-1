@@ -18,6 +18,13 @@ const subscriptionHistory = new mongoose.Schema({
     transaction_status:{
         type:String,
         enum:["success","failed",]
+    },
+    user_id:{
+        type:mongoose.Schema.Types.ObjectId,
+    },
+    table_name:{
+        type:String,
+        enum:["doctor" , "hospital" ,"patient"]
     }
 
 },{

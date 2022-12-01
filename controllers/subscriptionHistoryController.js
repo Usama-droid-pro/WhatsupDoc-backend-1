@@ -1,6 +1,7 @@
 
 const mongoose = require("mongoose")
 const subscriptionHistoryModel = require("../models/subscriptionHistoryModel")
+const ObjectId = require("mongodb").ObjectId;
 
 
 exports.createSubscriptionHistory = async(req,res)=>{
@@ -17,6 +18,8 @@ exports.createSubscriptionHistory = async(req,res)=>{
             month_name,
             transaction_id,
             transaction_status,
+            user_id:req.body.user_id,
+            table_name:req.body.table_name,
         })
 
         const result= await subscriptionHistory.save();
@@ -152,6 +155,8 @@ exports.updateSubscriptionHistory = async(req,res)=>{
             month_name,
             transaction_id,
             transaction_status,
+            user_id:req.body.user_id,
+            table_name:req.body.table_name
         } ,
         {
             new:true,
@@ -182,4 +187,75 @@ exports.updateSubscriptionHistory = async(req,res)=>{
 
 }
  
+exports.getSubscriptionHistoryByUserId = async (req,res)=>{
+    try{
+        let user_id = req.query.user_id;
+        user_id =new ObjectId(user_id);
 
+        const result = await subscriptionHistoryModel.aggregate([
+            {
+                $match:{user_id:user_id}
+            },
+            {
+             $lookup:{
+                from:"subscription_rates",
+                localField:"subscription_rate_id",
+                foreignField:"_id",
+                as :"subscription_rate_details"
+
+             }
+            },
+            {
+                $lookup:{
+                   from:"doctors",
+                   localField:"user_id",
+                   foreignField:"_id",
+                   as :"doctor_Details"
+   
+                }
+            },
+            {
+                $lookup:{
+                   from:"departments",
+                   localField:"doctor_Details.department_id",
+                   foreignField:"_id",
+                   as :"doctor_departmentDetails"
+   
+                }
+            },
+            
+            {
+                $lookup:{
+                   from:"hospitals",
+                   localField:"user_id",
+                   foreignField:"_id",
+                   as :"hospital_Details"
+                }
+            },
+
+        ])
+
+        if(result){
+            res.json({
+                message: "subscription history of this user fetched",
+                result:result,
+                status:true,
+            })
+        }
+        else{
+            res.json({
+                message: "could not fetch any details",
+                status:false,
+            })
+        }
+
+    }
+    catch(err){
+        res.json({
+            message: "Error",
+            error:err.message,
+            status:false
+        })
+    }
+
+}

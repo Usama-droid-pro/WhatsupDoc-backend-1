@@ -8,5 +8,7 @@ router.get("/getAllSubscriptionsHistory" , controller.getAllSubscriptionsHistori
 router.get("/getSubscriptionsHistoryById/:subscriptionHistoryId" , controller.getSubscriptionHistoryById)
 router.delete("/deleteSubscriptionHistory/:subscriptionHistoryId" , controller.deleteSubscriptionHistory)
 router.put("/updateSubscriptionHistory" , controller.updateSubscriptionHistory)
+router.get("/getSubscriptionHistoryByUserId" , controller.getSubscriptionHistoryByUserId)
+
 
 module.exports= router;
